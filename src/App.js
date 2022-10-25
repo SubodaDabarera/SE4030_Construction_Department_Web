@@ -4,7 +4,7 @@ import Login from "./authentication/Login";
 
 function App() {
   return (
-    <div className="App">
+    <div className="">
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
