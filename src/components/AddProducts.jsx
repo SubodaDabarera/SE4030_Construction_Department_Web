@@ -17,7 +17,6 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-
 const AddProducts = () => {
   const [ownersList, setOwnersList] = useState(staticOwnersList);
   const [price, setPrice] = useState(0);
@@ -25,9 +24,9 @@ const AddProducts = () => {
   const [category, setCategory] = useState("");
   const [type, setType] = useState("");
   const [location, setLocation] = useState("");
-  const [owner, setOwner] = useState({name:"Select . . ."});
+  const [owner, setOwner] = useState({ name: "Select . . ." });
   const [description, setDescription] = useState("");
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState("");
 
   // error messages
   const [isPriceError, setIsPriceError] = useState(false);
@@ -36,11 +35,11 @@ const AddProducts = () => {
   const [isTypeError, setIsTypeError] = useState(false);
   const [isLocationError, setIsLocationError] = useState(false);
   const [isOwnerError, setIsOwnerError] = useState(false);
+  const [isTitleError, setIsTitleError] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-
     if (qty <= 0) {
       setIsQtyError(true);
     } else {
@@ -65,9 +64,9 @@ const AddProducts = () => {
     //   setIsTypeError(false);
     // }
     if (title == "") {
-      setIsTypeError(true);
+      setIsTitleError(true);
     } else {
-      setIsTypeError(false);
+      setIsTitleError(false);
     }
 
     if (owner.name == "Select . . .") {
@@ -76,15 +75,16 @@ const AddProducts = () => {
       setIsOwnerError(false);
     }
 
-    if (qty > 0 && price > 0 && category != "" && owner.name != "Select . . ." && type != "") {
+    if (qty > 0 && price > 0 && owner.name != "Select . . ." && title != "") {
       await addNewProduct({
         owner: owner,
-        category: category,
-        type: type,
+        // category: category,
+        // type: type,
+        title,
         qty: qty,
         price,
         location,
-        description
+        description,
       })
         .then(() => {
           toast.success("Data added successfully !", {
@@ -200,48 +200,24 @@ const AddProducts = () => {
           )}
 
           <label
-            htmlFor="category"
+            htmlFor="title"
             className="block text-base font-medium text-gray-700 mt-6"
           >
-            Category :
+            Title :
           </label>
           <input
             type="text"
-            name="category"
-            id="category"
+            name="title"
+            id="title"
             autoComplete="given-name"
             className="mt-2 focus:ring-1 focus:ring-amber-400 focus:border-amber-400 block w-full shadow-sm sm:text-sm text-gray-600 border-gray-300 rounded-md"
             onChange={(event) => {
-              setCategory(event.target.value);
+              setTitle(event.target.value);
             }}
             required
           />
 
-          {isCategoryError && (
-            <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
-              Category must have value
-            </div>
-          )}
-
-          <label
-            htmlFor="type"
-            className="block text-base font-medium text-gray-700 mt-6"
-          >
-            Type :
-          </label>
-          <input
-            type="text"
-            name="type"
-            id="type"
-            autoComplete="given-name"
-            className="mt-2 focus:ring-1 focus:ring-amber-400 focus:border-amber-400 block w-full shadow-sm sm:text-sm text-gray-600 border-gray-300 rounded-md"
-            onChange={(event) => {
-              setType(event.target.value);
-            }}
-            required
-          />
-
-          {isTypeError && (
+          {isTitleError && (
             <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
               Type must have value
             </div>
@@ -278,7 +254,7 @@ const AddProducts = () => {
             Quantity :
           </label>
           <input
-            type="text"
+            type="number"
             name="quantity"
             id="quantity"
             autoComplete="given-name"
@@ -337,7 +313,6 @@ const AddProducts = () => {
               Submit
             </div>
           </div>
-          
         </div>
       </>
     </div>
