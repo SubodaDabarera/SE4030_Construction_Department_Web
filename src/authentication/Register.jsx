@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import '../components/firebase.config'
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userRole, setUserRole] = useState("");
 
-  const onSignIn = () => {
-    console.log(email, password, userRole);
+  const onSignUp = () => {
 
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
         localStorage.setItem("user", JSON.stringify(user))
+        console.log(user)
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -22,8 +22,8 @@ const Login = () => {
       });
   };
 
-  // after login to the application if wants add custom user details or retrieve added details in seperate data store
-  // like in mongodb
+
+  console.log(JSON.parse(localStorage.getItem('user')));
 
   return (
     <div className="min-h-screen flex">
@@ -85,10 +85,10 @@ const Login = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-amber-400 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    onClick={onSignIn}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    onClick={onSignUp}
                   >
-                    Sign in
+                    Sign Up
                   </button>
                 </div>
               </div>
@@ -107,4 +107,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
