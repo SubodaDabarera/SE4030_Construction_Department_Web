@@ -26,42 +26,42 @@ const navigation = [
     href: "#",
     icon: HomeIcon,
     current: false,
-    path: "/admin/new-product",
+    path: "/staff/new-product",
   },
   {
     name: "History",
     href: "#",
     icon: ClockIcon,
     current: false,
-    path: "/admin",
+    path: "/staff",
   },
   {
     name: "Balances",
     href: "#",
     icon: ScaleIcon,
-    current: true,
-    path: "/admin/",
+    current: false,
+    path: "/staff/",
   },
   {
     name: "Cards",
     href: "#",
     icon: CreditCardIcon,
     current: false,
-    path: "/admin/",
+    path: "/staff/",
   },
   {
     name: "Recipients",
     href: "#",
     icon: UserGroupIcon,
     current: false,
-    path: "/admin/",
+    path: "/staff/",
   },
   {
     name: "Reports",
     href: "#",
     icon: DocumentReportIcon,
-    current: false,
-    path: "/admin/",
+    current: true,
+    path: "/staff/",
   },
 ];
 const secondaryNavigation = [
@@ -74,7 +74,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function AdminLayout() {
+export default function StaffLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -197,6 +197,7 @@ export default function AdminLayout() {
                 alt="Easywire logo"
               /> */}
             </div>
+
             <nav
               className="mt-5 flex-1 flex flex-col divide-y divide-amber-700 overflow-y-auto"
               aria-label="Sidebar"

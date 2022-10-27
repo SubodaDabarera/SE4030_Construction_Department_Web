@@ -2,6 +2,9 @@ import "./App.css";
 import AdminLayout from "./layouts/AdminLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./authentication/Login";
+import Register from "./authentication/Register";
+import AddProducts from "./components/AddProducts";
+import StaffLayout from "./layouts/StaffLayout";
 
 function App() {
   return (
@@ -9,7 +12,10 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminLayout />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/admin/*" element={<AdminLayout />} />
+          <Route path="/staff/*" element={<StaffLayout />} />
+          
         </Routes>
       </Router>
     </div>
