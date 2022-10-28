@@ -19,6 +19,7 @@ import AddProducts from "../components/AddProducts";
 import AdminWrapper from "../wrappers/AdminWrapper";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import ProductsList from "../components/product/ProductList";
 
 const navigation = [
   {
@@ -29,11 +30,11 @@ const navigation = [
     path: "/admin/new-product",
   },
   {
-    name: "History",
+    name: "Products",
     href: "#",
     icon: ClockIcon,
     current: false,
-    path: "/admin",
+    path: "/admin/products",
   },
   {
     name: "Balances",
@@ -367,6 +368,7 @@ export default function AdminLayout() {
               <AdminWrapper>
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
+                  <Route path="/products" element={<ProductsList />} />
                 </Routes>
               </AdminWrapper>
             </div>
