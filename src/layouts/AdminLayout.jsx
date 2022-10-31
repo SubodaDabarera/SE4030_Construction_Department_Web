@@ -15,20 +15,13 @@ import {
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
-import AddProducts from "../components/AddProducts";
+import AddProducts from "../components/product/AddProducts";
 import AdminWrapper from "../wrappers/AdminWrapper";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
 
 const navigation = [
-  {
-    name: "New product",
-    href: "#",
-    icon: HomeIcon,
-    current: false,
-    path: "/admin/new-product",
-  },
   {
     name: "Products",
     href: "#",

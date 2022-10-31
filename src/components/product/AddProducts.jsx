@@ -3,7 +3,7 @@ import React, { Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { addProduct } from "../api/productAPI";
+import { addProduct } from "../../api/productAPI";
 
 const staticOwnersList = [
   { id: "ec1d8513-5f5c-4353-9868-0264fd59b14a", name: "Lakmal Perera" },
