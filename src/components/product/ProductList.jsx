@@ -1,12 +1,19 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { viewProductsList } from "../../api/productAPI";
+import { viewProduct, viewProductsList } from "../../api/productAPI";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
 export default function ProductsList() {
   const [productList, setProductList] = useState([]);
-
-  console.log("Products in UI ", productList);
+  const [open, setOpen] = useState(false);
+  const [productDetails, setProductDetails] = useState("");
 
   useEffect(() => {
     async function getProducts() {
@@ -18,6 +25,16 @@ export default function ProductsList() {
     getProducts();
   }, []);
 
+  const handleOpen = async (productId) => {
+    await viewProduct(productId, setProductDetails).then(() => {
+      console.log("product retrived successfully");
+    });
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -87,14 +104,64 @@ export default function ProductsList() {
                           {product.unitPrice}
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a
-                            href="#"
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
+                          <button onClick={() => handleOpen(product._id)}>
                             View
-                            <span className="sr-only">, {product.title}</span>
-                          </a>
+                            {/* <span className="sr-only">, {product.title}</span> */}
+                          </button>
                         </td>
+                        {/* {productDetails &&
+                          productDetails.map((prd) => { */}
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                          fullWidth={true}
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            <b className="align-middle pb-4">Product Details</b>
+                            <br />
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              <p className="align-middle text-gray-900 pb-4">
+                                Title : {productDetails.title}
+                              </p>
+                              <p className="align-middle text-gray-900 pb-4">
+                                Owner : {productDetails.owner}
+                              </p>
+                              <p className="align-middle text-gray-900 pb-4">
+                                Price : {productDetails.unitPrice}
+                              </p>
+                              <p className="align-middle text-gray-900 pb-4">
+                                Quantity : {productDetails.quantity}
+                              </p>
+                              <p className="align-middle text-gray-900 pb-4">
+                                Location : {productDetails.location}
+                              </p>
+                              <p className="align-middle text-gray-900 pb-4">
+                                Quantity : {productDetails.quantity}
+                              </p>
+                            </DialogContentText>
+                          </DialogContent>
+
+                          <DialogActions>
+                            {/* <button
+                              className="mr-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-2 py-1 text-sm font-medium text-white shadow-sm hover:bg-red-800 focus:outline-none bg-red-600"
+                              // onClick={() => exportPDF()}
+                            >
+                              <AiOutlineDownload size={18} />
+                            </button> */}
+                            <button
+                              type="button"
+                              className="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm"
+                              onClick={() => handleClose()}
+                            >
+                              OK
+                            </button>
+                          </DialogActions>
+                        </Dialog>
+                        {/* // })} */}
                       </tr>
                     ))}
                   </tbody>
