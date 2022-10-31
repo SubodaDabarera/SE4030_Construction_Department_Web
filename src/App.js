@@ -3,7 +3,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./authentication/Login";
 import Register from "./authentication/Register";
-import AddProducts from "./components/AddProducts";
+import AddProducts from "./components/product/AddProducts";
 import StaffLayout from "./layouts/StaffLayout";
 
 function App() {
@@ -15,7 +15,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/staff/*" element={<StaffLayout />} />
-          
         </Routes>
       </Router>
     </div>
