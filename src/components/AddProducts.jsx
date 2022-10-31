@@ -3,7 +3,7 @@ import React, { Fragment, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import { ChevronDownIcon } from "@heroicons/react/outline";
-import { addNewProduct } from "../api/productAPI";
+import { addProduct } from "../api/productAPI";
 
 const staticOwnersList = [
   { id: "ec1d8513-5f5c-4353-9868-0264fd59b14a", name: "Lakmal Perera" },
@@ -21,12 +21,11 @@ const AddProducts = () => {
   const [ownersList, setOwnersList] = useState(staticOwnersList);
   const [price, setPrice] = useState(0);
   const [qty, setQty] = useState(0);
-  const [category, setCategory] = useState("");
-  const [type, setType] = useState("");
   const [location, setLocation] = useState("");
   const [owner, setOwner] = useState({ name: "Select . . ." });
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState("");
+  const [isCreationSuccess, setIsCreationSuccess] = useState(false);
 
   // error messages
   const [isPriceError, setIsPriceError] = useState(false);
@@ -40,6 +39,7 @@ const AddProducts = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
+    console.log("handle submit");
     if (qty <= 0) {
       setIsQtyError(true);
     } else {
@@ -76,16 +76,17 @@ const AddProducts = () => {
     }
 
     if (qty > 0 && price > 0 && owner.name != "Select . . ." && title != "") {
-      await addNewProduct({
-        owner: owner,
-        // category: category,
-        // type: type,
-        title,
-        qty: qty,
-        price,
-        location,
-        description,
-      })
+      await addProduct(
+        {
+          owner: owner.name,
+          title,
+          quantity: qty,
+          unitPrice: price,
+          location,
+          description,
+        },
+        setIsCreationSuccess
+      )
         .then(() => {
           toast.success("Data added successfully !", {
             position: "top-right",
@@ -97,7 +98,7 @@ const AddProducts = () => {
             progress: undefined,
           });
 
-          navigate("/farmer/mySeedRequests");
+          // navigate("/farmer/mySeedRequests");
         })
         .catch(() => {
           toast.error("Something went wrong!", {
