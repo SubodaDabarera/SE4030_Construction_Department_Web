@@ -37,7 +37,7 @@ export const viewProductsList = async (setProductList) =>
     try {
       await axios.get(`${BACKEND_URL}/product`).then((result) => {
         if (result) {
-          console.log(result.data.existingProducts);
+          // console.log(result.data.existingProducts);
           setProductList(result.data.existingProducts);
           // setDemandList(result.data.demands);
           // setFilteredDemands(result.data.demands);
@@ -53,3 +53,16 @@ export const viewProductsList = async (setProductList) =>
       // setDemandList([]);
     }
   };
+
+export const viewProduct = async (productId, setProductDetails) => {
+  try {
+    await axios.get(`${BACKEND_URL}/product/` + productId).then((result) => {
+      // console.log(result.data.existingProduct);
+      setProductDetails(result.data.existingProduct);
+    });
+  } catch (err) {
+    console.log(err);
+    setProductDetails("");
+    // setDemandList([]);
+  }
+};
