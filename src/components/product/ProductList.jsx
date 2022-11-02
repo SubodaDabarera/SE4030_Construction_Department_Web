@@ -73,7 +73,6 @@ export default function ProductsList() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
-                      
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
@@ -113,7 +112,10 @@ export default function ProductsList() {
                           personIdx % 2 === 0 ? undefined : "bg-gray-50"
                         }
                       >
-                        <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
+                        <td
+                          className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
+                          data-testid="owner"
+                        >
                           {product.owner}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
