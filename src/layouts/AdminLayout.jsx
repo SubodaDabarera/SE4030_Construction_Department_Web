@@ -12,6 +12,8 @@ import {
   ScaleIcon,
   ShieldCheckIcon,
   UserGroupIcon,
+  ViewListIcon,
+  DocumentTextIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
@@ -20,35 +22,22 @@ import AdminWrapper from "../wrappers/AdminWrapper";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
+import RequestListNew from "../pages/pManager/RequestListNew";
 
 const navigation = [
   {
     name: "Products",
     href: "#",
-    icon: ClockIcon,
+    icon: ViewListIcon,
     current: false,
     path: "/admin/products",
   },
   {
-    name: "Balances",
+    name: "Requests",
     href: "#",
-    icon: ScaleIcon,
+    icon: DocumentTextIcon,
     current: true,
-    path: "/admin/",
-  },
-  {
-    name: "Cards",
-    href: "#",
-    icon: CreditCardIcon,
-    current: false,
-    path: "/admin/",
-  },
-  {
-    name: "Recipients",
-    href: "#",
-    icon: UserGroupIcon,
-    current: false,
-    path: "/admin/",
+    path: "/admin/order-requests",
   },
   {
     name: "Reports",
@@ -70,6 +59,7 @@ function classNames(...classes) {
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("Products");
 
   return (
     <>
@@ -132,7 +122,7 @@ export default function AdminLayout() {
                   /> */}
                 </div>
                 <nav
-                  className="mt-5 flex-shrink-0 h-full divide-y divide-amber-500 overflow-y-auto"
+                  className="mt-5 flex-shrink-0 h-full  divide-y divide-amber-500 overflow-y-auto"
                   aria-label="Sidebar"
                 >
                   <div className="px-2 space-y-1">
@@ -157,22 +147,85 @@ export default function AdminLayout() {
                       </Link>
                     ))}
                   </div>
-                  <div className="mt-6 pt-6">
-                    <div className="px-2 space-y-1">
-                      {secondaryNavigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-amber-100 hover:text-white hover:bg-amber-500"
-                        >
-                          <item.icon
-                            className="mr-4 h-6 w-6 text-amber-200"
+
+                  <div className=" grid justify-center mt-8 ">
+                    <Menu as="div" className="pt-10 relative ">
+                      <div>
+                        <Menu.Button className="max-w-xs rounded-lg flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 p-2 lg:rounded-md">
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt=""
+                          />
+                          <div className="ml-3 text-left">
+                            <span className="ml-3 text-gray-100 text-sm font-medium">
+                              <span className="sr-only">
+                                Open user menu for{" "}
+                              </span>
+                              Emilia Birch
+                            </span>
+                            <div className="text-xs text-gray-100">
+                              Emilia@email.com
+                            </div>
+                          </div>
+                          <ChevronDownIcon
+                            className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-100 lg:block"
                             aria-hidden="true"
                           />
-                          {item.name}
-                        </a>
-                      ))}
-                    </div>
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Your Profile
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Settings
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Logout
+                              </a>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
                   </div>
                 </nav>
               </div>
@@ -184,7 +237,9 @@ export default function AdminLayout() {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 ">
           <div className="flex flex-col flex-grow bg-amber-600 pt-5 pb-4 overflow-y-auto m-3 rounded-xl">
-            <div className="flex items-center flex-shrink-0 px-4">
+            <div className="flex items-center flex-shrink-0 px-4 text-white text-lg my-4">
+              <div className="font-bold text-center">Procurement Management System</div>
+
               {/* <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
@@ -200,8 +255,9 @@ export default function AdminLayout() {
                   <Link to={item.path}>
                     <div
                       key={item.name}
+                      onClick={() => setSelectedItem(item.name)}
                       className={classNames(
-                        item.current
+                        item.name == selectedItem
                           ? "bg-amber-700 text-white"
                           : "text-cyan-100 hover:text-white hover:bg-amber-500",
                         "group flex items-center px-2 py-2 text-base font-medium rounded-md"
@@ -217,24 +273,84 @@ export default function AdminLayout() {
                   </Link>
                 ))}
               </div>
-              <div className="mt-6 pt-6">
-                <div className="px-2 space-y-1">
-                  {secondaryNavigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-white hover:text-white hover:bg-amber-500"
-                    >
-                      <item.icon
-                        className="mr-4 h-6 w-6 text-white"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-              </div>
             </nav>
+            <div className="mb-6 grid justify-center">
+              <Menu as="div" className="ml-3 relative">
+                <div>
+                  <Menu.Button className="max-w-xs  rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 lg:p-2 lg:rounded-md">
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      alt=""
+                    />
+                    <div className="ml-3 text-left">
+                      <span className="hidden ml-3 text-gray-100 text-sm font-medium lg:block">
+                        <span className="sr-only">Open user menu for </span>
+                        Emilia Birch
+                      </span>
+                      <div className="text-xs text-gray-100">
+                        Emilia@email.com
+                      </div>
+                    </div>
+                    <ChevronDownIcon
+                      className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-100 lg:block"
+                      aria-hidden="true"
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Your Profile
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Settings
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Logout
+                        </a>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </div>
           </div>
         </div>
         {/* end of the sidebar */}
@@ -274,16 +390,16 @@ export default function AdminLayout() {
                 </form>
               </div>
               <div className="ml-4 flex items-center md:ml-6">
-                <button
+                {/* <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400"
                 >
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+                </button> */}
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="ml-3 relative">
+                {/* <Menu as="div" className="ml-3 relative">
                   <div>
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
@@ -352,7 +468,7 @@ export default function AdminLayout() {
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu> */}
               </div>
             </div>
           </div>
@@ -362,6 +478,7 @@ export default function AdminLayout() {
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
                   <Route path="/products" element={<ProductsList />} />
+                  <Route path="/order-requests" element={<RequestListNew />} />
                 </Routes>
               </AdminWrapper>
             </div>
