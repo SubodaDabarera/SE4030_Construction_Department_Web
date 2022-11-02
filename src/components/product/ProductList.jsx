@@ -1,7 +1,12 @@
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { viewProduct, viewProductsList } from "../../api/productAPI";
+import { Link } from "react-router-dom";
+import {
+  deleteProduct,
+  viewProduct,
+  viewProductsList,
+} from "../../api/productAPI";
 import {
   Dialog,
   DialogTitle,
@@ -9,6 +14,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
+import { AiOutlineEdit } from "react-icons/ai";
 
 export default function ProductsList() {
   const [productList, setProductList] = useState([]);
@@ -35,6 +41,21 @@ export default function ProductsList() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleDelete = async (productId) => {
+    await deleteProduct(productId).then(() => {
+      console.log("product deleted successfully");
+    });
+
+    async function getProducts() {
+      await viewProductsList(setProductList).then(() => {
+        console.log("Products retrived successfully");
+      });
+    }
+
+    getProducts();
+  };
+
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8">
@@ -80,7 +101,7 @@ export default function ProductsList() {
                         scope="col"
                         className="relative py-3.5 pl-3 pr-4 sm:pr-6"
                       >
-                        <span className="sr-only">Edit</span>
+                        Actions
                       </th>
                     </tr>
                   </thead>
@@ -103,14 +124,23 @@ export default function ProductsList() {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {product.unitPrice}
                         </td>
+
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button onClick={() => handleOpen(product._id)}>
                             View
-                            {/* <span className="sr-only">, {product.title}</span> */}
+                          </button>
+
+                          <Link to={`/staff/update-product/${product._id}`}>
+                            <button>
+                              <AiOutlineEdit size={20} color="green-500" />
+                            </button>
+                          </Link>
+
+                          <button onClick={() => handleDelete(product._id)}>
+                            Delete
                           </button>
                         </td>
-                        {/* {productDetails &&
-                          productDetails.map((prd) => { */}
+
                         <Dialog
                           open={open}
                           onClose={handleClose}
@@ -154,14 +184,13 @@ export default function ProductsList() {
                             </button> */}
                             <button
                               type="button"
-                              className="inline-flex items-center justify-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-sm"
+                              className="inline-flex items-center justify-center rounded-md border border-transparent bg-amber-400 px-8 py-2 text-m text-white"
                               onClick={() => handleClose()}
                             >
                               OK
                             </button>
                           </DialogActions>
                         </Dialog>
-                        {/* // })} */}
                       </tr>
                     ))}
                   </tbody>
