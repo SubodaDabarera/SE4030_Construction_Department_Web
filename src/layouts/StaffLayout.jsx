@@ -20,6 +20,7 @@ import AdminWrapper from "../wrappers/AdminWrapper";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
+import UpdateProduct from "../components/product/UpdateProduct";
 
 const navigation = [
   {
@@ -370,6 +371,10 @@ export default function StaffLayout() {
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
                   <Route path="/products" element={<ProductsList />} />
+                  <Route
+                    path="/update-product/:productId"
+                    element={<UpdateProduct />}
+                  />
                 </Routes>
               </AdminWrapper>
             </div>
