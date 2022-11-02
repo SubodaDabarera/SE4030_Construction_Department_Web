@@ -57,7 +57,7 @@ export const viewProductsList = async (setProductList) =>
 export const viewProduct = async (productId, setProductDetails) => {
   try {
     await axios.get(`${BACKEND_URL}/product/` + productId).then((result) => {
-      // console.log(result.data.existingProduct);
+      console.log(result.data.existingProduct);
       setProductDetails(result.data.existingProduct);
     });
   } catch (err) {

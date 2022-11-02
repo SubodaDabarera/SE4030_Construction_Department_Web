@@ -52,17 +52,18 @@ export default function ProductsList() {
                 <table className="min-w-full divide-y divide-gray-300">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th
-                        scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
-                      >
-                        Title
-                      </th>
+                      
                       <th
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
                         Owner
+                      </th>
+                      <th
+                        scope="col"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
+                        Title
                       </th>
                       <th
                         scope="col"
@@ -74,7 +75,7 @@ export default function ProductsList() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Price
+                        Price ($)
                       </th>
                       <th
                         scope="col"
@@ -101,7 +102,7 @@ export default function ProductsList() {
                           {product.quantity}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.unitPrice}
+                          {product.unitPrice}.00
                         </td>
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button onClick={() => handleOpen(product._id)}>
