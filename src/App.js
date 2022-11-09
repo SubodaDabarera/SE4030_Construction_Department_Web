@@ -3,7 +3,6 @@ import AdminLayout from "./layouts/AdminLayout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./authentication/Login";
 import Register from "./authentication/Register";
-import AddProducts from "./components/product/AddProducts";
 import StaffLayout from "./layouts/StaffLayout";
 import TopPMLayout from "./layouts/TopPMLayout";
 

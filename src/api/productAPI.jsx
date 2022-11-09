@@ -6,8 +6,6 @@ export const addProduct = async (
   { owner, title, unitPrice, quantity, location, description },
   setIsCreationSuccess
 ) => {
-  console.log("inside API");
-  console.log(owner);
   try {
     await axios
       .post(`${BACKEND_URL}/product/add-product`, {
@@ -27,32 +25,20 @@ export const addProduct = async (
   }
 };
 
-export const viewProductsList = async (setProductList) =>
-  // productId,
-  // setDemandList,
-  // setFilteredDemands,
-  // setIsSearchResultExists
-
-  {
-    try {
-      await axios.get(`${BACKEND_URL}/product`).then((result) => {
-        if (result) {
-          // console.log(result.data.existingProducts);
-          setProductList(result.data.existingProducts);
-          // setDemandList(result.data.demands);
-          // setFilteredDemands(result.data.demands);
-          // setIsSearchResultExists(result.data.demands);
-        } else {
-          // setDemandList([]);
-          // setFilteredDemands([]);
-          // setIsSearchResultExists(result.data.success);
-        }
-      });
-    } catch (err) {
-      console.log(err);
-      // setDemandList([]);
-    }
-  };
+export const viewProductsList = async (setProductList) => {
+  try {
+    await axios.get(`${BACKEND_URL}/product`).then((result) => {
+      if (result) {
+        setProductList(result.data.existingProducts);
+      } else {
+        setProductList([]);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    setProductList([]);
+  }
+};
 
 export const viewProduct = async (productId, setProductDetails) => {
   try {
@@ -63,6 +49,67 @@ export const viewProduct = async (productId, setProductDetails) => {
   } catch (err) {
     console.log(err);
     setProductDetails("");
-    // setDemandList([]);
+  }
+};
+
+export const deleteProduct = async (productId) => {
+  try {
+    await axios
+      .delete(`${BACKEND_URL}/product/` + productId)
+      .then(() => {
+        console.log("Product deleted");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch {}
+};
+
+export const updateProduct = async (
+  productId,
+  { owner, title, unitPrice, quantity, location, description },
+  setIsCreationSuccess
+) => {
+  const updateProduct = {
+    owner,
+    title,
+    unitPrice,
+    quantity,
+    location,
+    description,
+  };
+  console.log(updateProduct);
+  try {
+    await axios
+      .put(`${BACKEND_URL}/product/update/` + productId, updateProduct)
+      .then((result) => {
+        setIsCreationSuccess(result.data.success);
+      });
+  } catch (err) {
+    console.log(err);
+    setIsCreationSuccess(false);
+  }
+};
+
+export const viewProductOnUpdate = async (
+  productId,
+  setTitle,
+  setDescription,
+  setOwner,
+  setLocation,
+  setQty,
+  setPrice
+) => {
+  try {
+    await axios.get(`${BACKEND_URL}/product/` + productId).then((result) => {
+      setTitle(result.data.existingProduct.title);
+      setDescription(result.data.existingProduct.description);
+      setOwner(result.data.existingProduct.owner);
+      setLocation(result.data.existingProduct.location);
+      setQty(result.data.existingProduct.quantity);
+      setPrice(result.data.existingProduct.unitPrice);
+    });
+  } catch (err) {
+    console.log(err);
   }
 };
