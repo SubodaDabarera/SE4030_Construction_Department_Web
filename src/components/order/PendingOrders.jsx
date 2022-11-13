@@ -15,20 +15,25 @@ import {
   DialogActions,
 } from "@mui/material";
 import { AiOutlineEdit } from "react-icons/ai";
+import {
+  getApprovedOrderList,
+  getDeclinedOrderList,
+  getPendingOrderList,
+} from "../../api/orderAPI";
 
-export default function ProductsList() {
-  const [productList, setProductList] = useState([]);
+export default function PendingOrders() {
+  const [pendingOrders, setPendingOrders] = useState([]);
   const [open, setOpen] = useState(false);
   const [productDetails, setProductDetails] = useState("");
 
   useEffect(() => {
-    async function getProducts() {
-      await viewProductsList(setProductList).then(() => {
+    async function getOrders() {
+      await getPendingOrderList(setPendingOrders).then(() => {
         console.log("Products retrived successfully");
       });
     }
 
-    getProducts();
+    getOrders();
   }, []);
 
   const handleOpen = async (productId) => {
@@ -42,27 +47,13 @@ export default function ProductsList() {
     setOpen(false);
   };
 
-  const handleDelete = async (productId) => {
-    await deleteProduct(productId).then(() => {
-      console.log("product deleted successfully");
-    });
-
-    async function getProducts() {
-      await viewProductsList(setProductList).then(() => {
-        console.log("Products retrived successfully");
-      });
-    }
-
-    getProducts();
-  };
-
   return (
     <>
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">
-              Products List
+              Pending List
             </h1>
           </div>
         </div>
@@ -77,26 +68,21 @@ export default function ProductsList() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Owner
+                        Name
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Title
+                        Product
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Quantity
+                        Supplier Name
                       </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Price ($)
-                      </th>
+
                       <th
                         scope="col"
                         className="relative py-3.5 pl-3 pr-4 sm:pr-6"
@@ -106,7 +92,7 @@ export default function ProductsList() {
                     </tr>
                   </thead>
                   <tbody className="bg-white">
-                    {productList.map((product, personIdx) => (
+                    {pendingOrders.map((product, personIdx) => (
                       <tr
                         className={
                           personIdx % 2 === 0 ? undefined : "bg-gray-50"
@@ -122,25 +108,12 @@ export default function ProductsList() {
                           {product.title}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.quantity}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.unitPrice}.00
+                          {product.siteManagerName}
                         </td>
 
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                           <button onClick={() => handleOpen(product._id)}>
                             View
-                          </button>
-
-                          <Link to={`/staff/update-product/${product._id}`}>
-                            <button>
-                              <AiOutlineEdit size={20} color="green-500" />
-                            </button>
-                          </Link>
-
-                          <button onClick={() => handleDelete(product._id)}>
-                            Delete
                           </button>
                         </td>
 
