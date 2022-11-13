@@ -14,7 +14,7 @@ import {
   DialogContentText,
   DialogActions,
 } from "@mui/material";
-import { AiOutlineEdit, AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
+import { AiOutlineEdit } from "react-icons/ai";
 
 export default function ProductsList() {
   const [productList, setProductList] = useState([]);
@@ -128,23 +128,19 @@ export default function ProductsList() {
                           {product.unitPrice}.00
                         </td>
 
-                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-center text-sm font-medium sm:pr-6">
-                          <button
-                              className="p-1 bg-slate-300 rounded-md mr-2 text-slate-800 hover:bg-gray-400"
-                              onClick={() => handleOpen(product._id)}>
-                            <AiOutlineEye size={20} color="green-500" />
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                          <button onClick={() => handleOpen(product._id)}>
+                            View
                           </button>
 
                           <Link to={`/staff/update-product/${product._id}`}>
-                            <button className="p-1 bg-green-300 rounded-md mr-2 text-green-900 hover:bg-green-400">
+                            <button>
                               <AiOutlineEdit size={20} color="green-500" />
                             </button>
                           </Link>
 
-                          <button
-                              className="p-1 bg-red-300 rounded-md text-red-900 hover:bg-red-400"
-                              onClick={() => handleDelete(product._id)}>
-                            <AiOutlineDelete size={20} color="green-500" />
+                          <button onClick={() => handleDelete(product._id)}>
+                            Delete
                           </button>
                         </td>
 
