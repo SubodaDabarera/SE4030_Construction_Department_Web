@@ -160,7 +160,7 @@ const UpdateProducts = () => {
           >
             <div>
               <Menu.Button className="inline-flex py-2 px-5 border border-gray-300 md:mr-0 md:pr-0 w-full rounded-md text-sm font-medium text-gray-700 active:ring-2 active:ring-amber-400 active:border-0 focus:ring-2 focus:ring-amber-400 focus:border-0">
-                <div className="text-gray-500 font-normal">{owner.name}</div>
+                <div className="text-gray-500 font-normal">{owner}</div>
                 <ChevronDownIcon
                   color="#a3a3a3"
                   className=" ml-0.5 h-5 w-3 absolute right-6"
