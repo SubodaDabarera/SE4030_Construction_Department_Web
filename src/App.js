@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./authentication/Login";
 import Register from "./authentication/Register";
 import StaffLayout from "./layouts/StaffLayout";
+import TopPMLayout from "./layouts/TopPMLayout";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/admin/*" element={<AdminLayout />} />
           <Route path="/staff/*" element={<StaffLayout />} />
+          <Route path="/topPM/*" element={<TopPMLayout />} />
         </Routes>
       </Router>
     </div>
