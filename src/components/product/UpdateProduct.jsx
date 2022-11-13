@@ -30,8 +30,7 @@ const UpdateProducts = () => {
   const [price, setPrice] = useState("");
   const [qty, setQty] = useState("");
   const [location, setLocation] = useState("");
-  // const [owner, setOwner] = useState({ name: "Select . . ." });
-  const [owner, setOwner] = useState("");
+  const [owner, setOwner] = useState({ name: "Select . . ." });
   const [description, setDescription] = useState("");
   const [title, setTitle] = useState();
   const [isCreationSuccess, setIsCreationSuccess] = useState(false);
@@ -58,8 +57,7 @@ const UpdateProducts = () => {
         setQty,
         setPrice
       ).then((res) => {
-        console.log("product retrieved successfully");
-        console.log(owner);
+        console.log("product retrived successfully");
       });
     }
 
@@ -155,14 +153,14 @@ const UpdateProducts = () => {
             Owner of the Product :
           </label>
 
-           {/*dropdown start */}
+          {/* dropdown start */}
           <Menu
             as="div"
             className="relative inline-block text-left w-full mt-2"
           >
             <div>
               <Menu.Button className="inline-flex py-2 px-5 border border-gray-300 md:mr-0 md:pr-0 w-full rounded-md text-sm font-medium text-gray-700 active:ring-2 active:ring-amber-400 active:border-0 focus:ring-2 focus:ring-amber-400 focus:border-0">
-                <div className="text-gray-500 font-normal">{owner}</div>
+                <div className="text-gray-500 font-normal">{owner.name}</div>
                 <ChevronDownIcon
                   color="#a3a3a3"
                   className=" ml-0.5 h-5 w-3 absolute right-6"
@@ -189,7 +187,7 @@ const UpdateProducts = () => {
                           <Menu.Item key={owner.id}>
                             {({ active }) => (
                               <a
-                                onClick={() => setOwner(owner.name)}
+                                onClick={() => setOwner(owner)}
                                 className={classNames(
                                   active
                                     ? "bg-amber-50 text-gray-700"
@@ -210,19 +208,6 @@ const UpdateProducts = () => {
             </Transition>
           </Menu>
           {/* dropdown end */}
-
-          {/*disabled input start*/}
-          {/*<input*/}
-          {/*    type="text"*/}
-          {/*    name="owner"*/}
-          {/*    id="owner"*/}
-          {/*    autoComplete="given-name"*/}
-          {/*    value={owner}*/}
-          {/*    className="mt-2 focus:ring-1 focus:ring-amber-400 focus:border-amber-400 block w-full shadow-sm sm:text-sm text-gray-600 border-gray-300 rounded-md"*/}
-          {/*    required*/}
-          {/*    disabled*/}
-          {/*/>*/}
-          {/*disabled input end*/}
 
           {isOwnerError && (
             <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
