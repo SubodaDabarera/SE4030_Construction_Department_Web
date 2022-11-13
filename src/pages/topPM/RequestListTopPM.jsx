@@ -11,14 +11,14 @@ import {
 } from "@mui/material";
 import {
   getRequestsListByStatus,
+  getTopPMRequestedOrders,
   updatePartialOrderQty,
   updateRequestStatus,
 } from "../../api/orderAPI";
 import RequestRow from "../../components/procurementManager/RequestRow";
 import { getUserDetails } from "../../api/userAPI";
-import { async } from "@firebase/util";
 
-export default function RequestListNew() {
+export default function RequestListTopPM() {
   const [productList, setProductList] = useState([]);
   const [open, setOpen] = useState(false);
   const [productDetails, setProductDetails] = useState("");
@@ -33,7 +33,7 @@ export default function RequestListNew() {
 
   useEffect(() => {
     async function getData() {
-      await getRequestsListByStatus(setRequestsList).then(() => {
+      await getTopPMRequestedOrders(setRequestsList).then(() => {
         console.log("Data retrieved successfully");
       });
     }
@@ -69,7 +69,7 @@ export default function RequestListNew() {
     }
 
     async function getData() {
-      await getRequestsListByStatus(setRequestsList).then(() => {
+      await getTopPMRequestedOrders(setRequestsList).then(() => {
         console.log("Data retrieved successfully");
       });
     }
@@ -88,67 +88,6 @@ export default function RequestListNew() {
       setIsAcceptClicked(false);
       handleOpen(product, "reject");
     }
-  };
-
-  const onPartialApprove = async (product) => {
-    if (approvedQuantity > 0) {
-      if (product.quantity >= approvedQuantity) {
-        await updatePartialOrderQty(
-          product._id,
-          approvedQuantity,
-          product.unitPrice
-        )
-          .then(() => {
-            console.log("Partially approved");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-
-        await updateRequestStatus({
-          orderId: product._id,
-          updateOrder: "partiallyApproved",
-        })
-          .then(() => {
-            console.log("Qty updated in partially approved order");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-
-        await getRequestsListByStatus(setRequestsList).then(() => {
-          console.log("Data retrieved successfully");
-        });
-
-        setIsAppovedQuantity(false);
-        setPartialOpen(false);
-        setApprovedQuantity(0);
-      } else {
-        // add error message here...
-      }
-    } else {
-      setIsAppovedQuantity(true);
-      setPartialOpen(true);
-    }
-  };
-
-  const onSendToTopManager = async (product) => {
-    await updateRequestStatus({
-      orderId: product._id,
-      updateOrder: "topManager",
-    })
-      .then(() => {
-        console.log("order updated");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    await getRequestsListByStatus(setRequestsList).then(() => {
-      console.log("Data retrieved successfully");
-    });
-
-    setSendTopManagerOpen(false);
   };
 
   return (
@@ -216,16 +155,10 @@ export default function RequestListNew() {
                           {product.unitPrice * product.quantity}.00
                         </td>
 
-                        {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <button onClick={() => handleOpen(product)}>
-                            View
-                          </button>
-                        </td> */}
-
                         <td className="whitespace-nowrap py-4 pl-3 text-sm font-medium sm:pr-6 grid justify-center ">
                           <div className="flex justify-center w-full">
                             <button
-                              className="p-1 bg-green-300 rounded-md mr-2 text-green-900 w-full hover:bg-green-400"
+                              className="px-3 p-2 bg-green-300 rounded-md mr-2 text-green-900 w-full hover:bg-green-400"
                               onClick={() =>
                                 onEvaluation(product._id, "approved", product)
                               }
@@ -233,7 +166,7 @@ export default function RequestListNew() {
                               Accept
                             </button>
                             <button
-                              className="p-1 bg-red-300 rounded-md text-red-900 w-full hover:bg-red-400"
+                              className="px-3 p-2 bg-red-300 rounded-md text-red-900 w-full hover:bg-red-400"
                               onClick={() =>
                                 onEvaluation(product._id, "rejected", product)
                               }
@@ -241,19 +174,6 @@ export default function RequestListNew() {
                               Reject
                             </button>
                           </div>
-                          <button
-                            onClick={() => handleOpen(product, "partial")}
-                            className="p-1 my-1 bg-slate-300 rounded-md text-slate-800 hover:bg-gray-400"
-                          >
-                            Partially approve
-                          </button>
-
-                          <button
-                            onClick={() => handleOpen(product, "topManager")}
-                            className="px-2 p-1 bg-slate-300 rounded-md text-slate-800 hover:bg-gray-400"
-                          >
-                            Send to Top manager
-                          </button>
                         </td>
 
                         {isAcceptClicked ? (
@@ -369,141 +289,6 @@ export default function RequestListNew() {
                             </Dialog>
                           </>
                         )}
-
-                        {/* partial approve modal */}
-                        <Dialog
-                          open={partialOpen}
-                          onClose={() => setPartialOpen(false)}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                          fullWidth={true}
-                        >
-                          <DialogTitle id="alert-dialog-title">
-                            <div className="align-middle py-4 justify-center grid font-semibold">
-                              Partially approve order
-                            </div>
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                              {productDetails && (
-                                <>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Title : {productDetails.title}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Owner : {productDetails.owner}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Price : {productDetails.unitPrice}.00
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Quantity : {product.quantity}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Location : {productDetails.location}
-                                  </p>
-                                </>
-                              )}
-                              {userDetails && (
-                                <p className="align-middle text-gray-900 pb-4 ml-4">
-                                  Seller name : {userDetails.userName}
-                                </p>
-                              )}
-                              <p className="align-middle text-yellow-600 pb-4 ml-4 mt-4">
-                                Enter the approved quantity
-                              </p>
-                              <div className="mt-1">
-                                <input
-                                  id="quantity"
-                                  name="quantity"
-                                  type="number"
-                                  autoComplete="current-quantity"
-                                  placeholder="Enter quantity"
-                                  required
-                                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                                  onChange={(e) =>
-                                    setApprovedQuantity(e.target.value)
-                                  }
-                                />
-                              </div>
-                              {isAppovedQuantity && (
-                                <div className="bg-red-200 mt-1 w-full px-2 text-sm py-1 rounded-md text-red-700">
-                                  Please enter quantity
-                                </div>
-                              )}
-                            </DialogContentText>
-                          </DialogContent>
-
-                          <DialogActions>
-                            <button
-                              type="button"
-                              className="inline-flex w-full font-semibold items-center justify-center rounded-md border border-transparent bg-yellow-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
-                              onClick={() =>
-                                // handleClose("approved", product._id)
-                                // setPartialOpen(false)
-                                onPartialApprove(product)
-                              }
-                            >
-                              Partialy approve
-                            </button>
-                          </DialogActions>
-                        </Dialog>
-
-                        {/* send to top manager */}
-                        <Dialog
-                          open={sendTopManagerOpen}
-                          onClose={() => setSendTopManagerOpen(false)}
-                          aria-labelledby="alert-dialog-title"
-                          aria-describedby="alert-dialog-description"
-                          fullWidth={true}
-                        >
-                          <DialogTitle id="alert-dialog-title">
-                            <div className="align-middle py-4 justify-center grid font-semibold">
-                              Order Details
-                            </div>
-                          </DialogTitle>
-                          <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                              {productDetails && (
-                                <>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Title : {productDetails.title}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Owner : {productDetails.owner}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Price : {productDetails.unitPrice}.00
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Quantity : {product.quantity}
-                                  </p>
-                                  <p className="align-middle text-gray-900 pb-4 ml-4">
-                                    Location : {productDetails.location}
-                                  </p>
-                                </>
-                              )}
-                              {userDetails && (
-                                <p className="align-middle text-gray-900 pb-4 ml-4">
-                                  Seller name : {userDetails.userName}
-                                </p>
-                              )}
-                            </DialogContentText>
-                          </DialogContent>
-
-                          <DialogActions>
-                            <button
-                              type="button"
-                              className="inline-flex w-full font-semibold items-center justify-center rounded-md border border-transparent bg-yellow-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
-                              onClick={() =>
-                                // handleClose("approved", product._id)
-                                onSendToTopManager(product)
-                              }
-                            >
-                              Send to top manager
-                            </button>
-                          </DialogActions>
-                        </Dialog>
                       </tr>
                     ))}
                   </tbody>

@@ -12,6 +12,8 @@ import {
   ScaleIcon,
   ShieldCheckIcon,
   UserGroupIcon,
+  ViewListIcon,
+  DocumentTextIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
@@ -20,66 +22,45 @@ import AdminWrapper from "../wrappers/AdminWrapper";
 import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
-import UpdateProduct from "../components/product/UpdateProduct";
-import AcceptOrders from "../components/order/AcceptOrders";
-import DeclinedOrders from "../components/order/DeclinedOrders";
-import PendingOrders from "../components/order/PendingOrders";
-import ConfirmedOrders from "../components/order/ConfirmedOrders";
+import RequestListNew from "../pages/pManager/RequestListNew";
+import RequestListTopPM from "../pages/topPM/RequestListTopPM";
 
 const navigation = [
   {
-    name: "Add Items",
+    name: "Products",
     href: "#",
-    icon: HomeIcon,
+    icon: ViewListIcon,
     current: false,
-    path: "/staff/new-product",
+    path: "/topPM/products",
   },
   {
-    name: "View Items",
+    name: "Requests",
     href: "#",
-    icon: ClockIcon,
+    icon: DocumentTextIcon,
     current: true,
-    path: "/staff/products",
+    path: "/topPM/order-requests",
   },
   {
-    name: "Waiting for approval",
+    name: "Reports",
     href: "#",
     icon: DocumentReportIcon,
     current: false,
-    path: "/staff/orders-pending",
-  },
-
-  {
-    name: "Approved",
-    href: "#",
-    icon: DocumentReportIcon,
-    current: false,
-    path: "/staff/orders-approved",
-  },
-  {
-    name: "Decline",
-    href: "#",
-    icon: DocumentReportIcon,
-    current: false,
-    path: "/staff/orders-declined",
-  },
-
-  {
-    name: "Confirmed",
-    href: "#",
-    icon: DocumentReportIcon,
-    current: false,
-    path: "/staff/orders-confirmed",
+    path: "/topPM/",
   },
 ];
-const secondaryNavigation = [];
+const secondaryNavigation = [
+  { name: "Settings", href: "#", icon: CogIcon },
+  { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
+  { name: "Privacy", href: "#", icon: ShieldCheckIcon },
+];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function StaffLayout() {
+export default function TopPMLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState("Products");
 
   return (
     <>
@@ -142,7 +123,7 @@ export default function StaffLayout() {
                   /> */}
                 </div>
                 <nav
-                  className="mt-5 flex-shrink-0 h-full divide-y divide-amber-500 overflow-y-auto"
+                  className="mt-5 flex-shrink-0 h-full  divide-y divide-amber-500 overflow-y-auto"
                   aria-label="Sidebar"
                 >
                   <div className="px-2 space-y-1">
@@ -167,6 +148,86 @@ export default function StaffLayout() {
                       </Link>
                     ))}
                   </div>
+
+                  <div className=" grid justify-center mt-8 ">
+                    <Menu as="div" className="pt-10 relative ">
+                      <div>
+                        <Menu.Button className="max-w-xs rounded-lg flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 p-2 lg:rounded-md">
+                          <img
+                            className="h-8 w-8 rounded-full"
+                            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                            alt=""
+                          />
+                          <div className="ml-3 text-left">
+                            <span className="ml-3 text-gray-100 text-sm font-medium">
+                              <span className="sr-only">
+                                Open user menu for{" "}
+                              </span>
+                              Emilia Birch
+                            </span>
+                            <div className="text-xs text-gray-100">
+                              Emilia@email.com
+                            </div>
+                          </div>
+                          <ChevronDownIcon
+                            className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-100 lg:block"
+                            aria-hidden="true"
+                          />
+                        </Menu.Button>
+                      </div>
+                      <Transition
+                        as={Fragment}
+                        enter="transition ease-out duration-100"
+                        enterFrom="transform opacity-0 scale-95"
+                        enterTo="transform opacity-100 scale-100"
+                        leave="transition ease-in duration-75"
+                        leaveFrom="transform opacity-100 scale-100"
+                        leaveTo="transform opacity-0 scale-95"
+                      >
+                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Your Profile
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Settings
+                              </a>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#"
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Logout
+                              </a>
+                            )}
+                          </Menu.Item>
+                        </Menu.Items>
+                      </Transition>
+                    </Menu>
+                  </div>
                 </nav>
               </div>
             </Transition.Child>
@@ -179,15 +240,15 @@ export default function StaffLayout() {
           <div className="flex flex-col flex-grow bg-amber-600 pt-5 pb-4 overflow-y-auto m-3 rounded-xl">
             <div className="flex items-center flex-shrink-0 px-4 text-white text-lg my-4">
               <div className="font-bold text-center">
-                Procurement Management System - Staff
+                Procurement Management System
               </div>
+
               {/* <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
                 alt="Easywire logo"
               /> */}
             </div>
-
             <nav
               className="mt-5 flex-1 flex flex-col divide-y divide-amber-700 overflow-y-auto"
               aria-label="Sidebar"
@@ -197,8 +258,9 @@ export default function StaffLayout() {
                   <Link to={item.path}>
                     <div
                       key={item.name}
+                      onClick={() => setSelectedItem(item.name)}
                       className={classNames(
-                        item.current
+                        item.name == selectedItem
                           ? "bg-amber-700 text-white"
                           : "text-cyan-100 hover:text-white hover:bg-amber-500",
                         "group flex items-center px-2 py-2 text-base font-medium rounded-md"
@@ -215,6 +277,83 @@ export default function StaffLayout() {
                 ))}
               </div>
             </nav>
+            <div className="mb-6 grid justify-center">
+              <Menu as="div" className="ml-3 relative">
+                <div>
+                  <Menu.Button className="max-w-xs  rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 lg:p-2 lg:rounded-md">
+                    <img
+                      className="h-8 w-8 rounded-full"
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      alt=""
+                    />
+                    <div className="ml-3 text-left">
+                      <span className="hidden ml-3 text-gray-100 text-sm font-medium lg:block">
+                        <span className="sr-only">Open user menu for </span>
+                        Emilia Birch
+                      </span>
+                      <div className="text-xs text-gray-100">
+                        Emilia@email.com
+                      </div>
+                    </div>
+                    <ChevronDownIcon
+                      className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-100 lg:block"
+                      aria-hidden="true"
+                    />
+                  </Menu.Button>
+                </div>
+                <Transition
+                  as={Fragment}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 scale-95"
+                  enterTo="transform opacity-100 scale-100"
+                  leave="transition ease-in duration-75"
+                  leaveFrom="transform opacity-100 scale-100"
+                  leaveTo="transform opacity-0 scale-95"
+                >
+                  <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Your Profile
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Settings
+                        </a>
+                      )}
+                    </Menu.Item>
+                    <Menu.Item>
+                      {({ active }) => (
+                        <a
+                          href="#"
+                          className={classNames(
+                            active ? "bg-gray-100" : "",
+                            "block px-4 py-2 text-sm text-gray-700"
+                          )}
+                        >
+                          Logout
+                        </a>
+                      )}
+                    </Menu.Item>
+                  </Menu.Items>
+                </Transition>
+              </Menu>
+            </div>
           </div>
         </div>
         {/* end of the sidebar */}
@@ -253,87 +392,7 @@ export default function StaffLayout() {
                   </div>
                 </form>
               </div>
-              <div className="ml-4 flex items-center md:ml-6">
-                <button
-                  type="button"
-                  className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400"
-                >
-                  <span className="sr-only">View notifications</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
-
-                {/* Profile dropdown */}
-                <Menu as="div" className="ml-3 relative">
-                  <div>
-                    <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
-                      <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
-                        <span className="sr-only">Open user menu for </span>
-                        Emilia Birch
-                      </span>
-                      <ChevronDownIcon
-                        className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
-                        aria-hidden="true"
-                      />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Logout
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
-              </div>
+              <div className="ml-4 flex items-center md:ml-6"></div>
             </div>
           </div>
           <main className="flex-1 pb-8">
@@ -342,17 +401,7 @@ export default function StaffLayout() {
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
                   <Route path="/products" element={<ProductsList />} />
-                  <Route path="/orders-approved" element={<AcceptOrders />} />
-                  <Route path="/orders-declined" element={<DeclinedOrders />} />
-                  <Route path="/orders-pending" element={<PendingOrders />} />
-                  <Route
-                    path="/orders-confirmed"
-                    element={<ConfirmedOrders />}
-                  />
-                  <Route
-                    path="/update-product/:productId"
-                    element={<UpdateProduct />}
-                  />
+                  <Route path="/order-requests" element={<RequestListTopPM />} />
                 </Routes>
               </AdminWrapper>
             </div>

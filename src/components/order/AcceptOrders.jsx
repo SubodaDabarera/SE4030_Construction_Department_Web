@@ -15,26 +15,36 @@ import {
   DialogActions,
 } from "@mui/material";
 import { AiOutlineEdit } from "react-icons/ai";
+import {
+  getApprovedOrderList,
+  getOrderByParamsId,
+  updateRequestStatus,
+} from "../../api/orderAPI";
 
-export default function ProductsList() {
-  const [productList, setProductList] = useState([]);
+export default function AcceptOrders() {
+  const [approvedOrders, setApprovedOrders] = useState([]);
   const [open, setOpen] = useState(false);
-  const [productDetails, setProductDetails] = useState("");
+  const [orderDetails, setOrderDetails] = useState("");
+  const [diliveryStatus, setDeliveryStatus] = useState(
+    setOrderDetails.deliveryNoteAdded
+  );
+  const [value, setValue] = useState(true);
 
   useEffect(() => {
-    async function getProducts() {
-      await viewProductsList(setProductList).then(() => {
+    async function getOrders() {
+      await getApprovedOrderList(setApprovedOrders).then(() => {
         console.log("Products retrived successfully");
       });
     }
 
-    getProducts();
+    getOrders();
   }, []);
 
-  const handleOpen = async (productId) => {
-    await viewProduct(productId, setProductDetails).then(() => {
+  const handleOpen = async (orderId) => {
+    await getOrderByParamsId(orderId, setOrderDetails).then(() => {
       console.log("product retrived successfully");
     });
+
     setOpen(true);
   };
 
@@ -42,18 +52,21 @@ export default function ProductsList() {
     setOpen(false);
   };
 
-  const handleDelete = async (productId) => {
-    await deleteProduct(productId).then(() => {
-      console.log("product deleted successfully");
+  const handleConfirm = async (orderId) => {
+    let status = "confirmed";
+    await updateRequestStatus({ orderId, updateOrder: status }).then(() => {
+      console.log("Order details updated");
     });
 
-    async function getProducts() {
-      await viewProductsList(setProductList).then(() => {
+    setOpen(false);
+
+    async function getOrders() {
+      await getApprovedOrderList(setApprovedOrders).then(() => {
         console.log("Products retrived successfully");
       });
     }
 
-    getProducts();
+    getOrders();
   };
 
   return (
@@ -62,7 +75,7 @@ export default function ProductsList() {
         <div className="sm:flex sm:items-center">
           <div className="sm:flex-auto">
             <h1 className="text-xl font-semibold text-gray-900">
-              Products List
+              Approved List
             </h1>
           </div>
         </div>
@@ -77,26 +90,21 @@ export default function ProductsList() {
                         scope="col"
                         className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                       >
-                        Owner
+                        Name
                       </th>
                       <th
                         scope="col"
                         className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Title
+                        Product
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
                       >
-                        Quantity
+                        Supplier Name
                       </th>
-                      <th
-                        scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                      >
-                        Price ($)
-                      </th>
+
                       <th
                         scope="col"
                         className="relative py-3.5 pl-3 pr-4 sm:pr-6"
@@ -106,7 +114,7 @@ export default function ProductsList() {
                     </tr>
                   </thead>
                   <tbody className="bg-white">
-                    {productList.map((product, personIdx) => (
+                    {approvedOrders.map((order, personIdx) => (
                       <tr
                         className={
                           personIdx % 2 === 0 ? undefined : "bg-gray-50"
@@ -116,31 +124,18 @@ export default function ProductsList() {
                           className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6"
                           data-testid="owner"
                         >
-                          {product.owner}
+                          {order.owner}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.title}
+                          {order.title}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.quantity}
-                        </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {product.unitPrice}.00
+                          {order.siteManagerName}
                         </td>
 
                         <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <button onClick={() => handleOpen(product._id)}>
-                            View
-                          </button>
-
-                          <Link to={`/staff/update-product/${product._id}`}>
-                            <button>
-                              <AiOutlineEdit size={20} color="green-500" />
-                            </button>
-                          </Link>
-
-                          <button onClick={() => handleDelete(product._id)}>
-                            Delete
+                          <button onClick={() => handleOpen(order._id)}>
+                            Confirm Order
                           </button>
                         </td>
 
@@ -158,23 +153,30 @@ export default function ProductsList() {
                           <DialogContent>
                             <DialogContentText id="alert-dialog-description">
                               <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Title : {productDetails.title}
+                                Name : {orderDetails.owner}
+                              </p>
+
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
+                                Product : {orderDetails.title}
                               </p>
                               <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Owner : {productDetails.owner}
+                                Unit Price : {orderDetails.unitPrice}
                               </p>
                               <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Price : {productDetails.unitPrice}
+                                Quantity : {orderDetails.quantity}
+                              </p>
+                              {/* <p className="align-middle text-gray-900 pb-4 ml-4">
+                                Price : {orderDetails.unitPrice}
+                              </p> */}
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
+                                Supplier Name : {orderDetails.siteManagerName}
+                              </p>
+                              {/* <p className="align-middle text-gray-900 pb-4 ml-4">
+                                Location : {oorderDetailsrder.location}
                               </p>
                               <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Quantity : {productDetails.quantity}
-                              </p>
-                              <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Location : {productDetails.location}
-                              </p>
-                              <p className="align-middle text-gray-900 pb-4 ml-4">
-                                Quantity : {productDetails.quantity}
-                              </p>
+                                Quantity : {orderDetails.quantity}
+                              </p> */}
                             </DialogContentText>
                           </DialogContent>
 
@@ -187,10 +189,17 @@ export default function ProductsList() {
                             </button> */}
                             <button
                               type="button"
-                              className="inline-flex w-full font-semibold items-center justify-center rounded-md border border-transparent bg-yellow-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
+                              className="inline-flex w-full font-semibold items-center justify-center rounded-md border border-transparent bg-green-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
+                              onClick={() => handleConfirm(orderDetails._id)}
+                            >
+                              Confirm Order
+                            </button>
+                            <button
+                              type="button"
+                              className="inline-flex w - '50%' font-semibold items-center justify-center rounded-md border border-transparent bg-yellow-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
                               onClick={() => handleClose()}
                             >
-                              OK
+                              Cancel
                             </button>
                           </DialogActions>
                         </Dialog>
