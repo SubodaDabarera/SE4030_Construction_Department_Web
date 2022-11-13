@@ -21,56 +21,58 @@ import { Link } from "react-router-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
 import UpdateProduct from "../components/product/UpdateProduct";
+import AcceptOrders from "../components/order/AcceptOrders";
+import DeclinedOrders from "../components/order/DeclinedOrders";
+import PendingOrders from "../components/order/PendingOrders";
+import ConfirmedOrders from "../components/order/ConfirmedOrders";
 
 const navigation = [
   {
-    name: "New product",
+    name: "Add Items",
     href: "#",
     icon: HomeIcon,
     current: false,
     path: "/staff/new-product",
   },
   {
-    name: "Products",
+    name: "View Items",
     href: "#",
     icon: ClockIcon,
-    current: false,
+    current: true,
     path: "/staff/products",
   },
   {
-    name: "Balances",
-    href: "#",
-    icon: ScaleIcon,
-    current: false,
-    path: "/staff/",
-  },
-  {
-    name: "Cards",
-    href: "#",
-    icon: CreditCardIcon,
-    current: false,
-    path: "/staff/",
-  },
-  {
-    name: "Recipients",
-    href: "#",
-    icon: UserGroupIcon,
-    current: false,
-    path: "/staff/",
-  },
-  {
-    name: "Reports",
+    name: "Waiting for approval",
     href: "#",
     icon: DocumentReportIcon,
-    current: true,
-    path: "/staff/",
+    current: false,
+    path: "/staff/orders-pending",
+  },
+
+  {
+    name: "Approved",
+    href: "#",
+    icon: DocumentReportIcon,
+    current: false,
+    path: "/staff/orders-approved",
+  },
+  {
+    name: "Decline",
+    href: "#",
+    icon: DocumentReportIcon,
+    current: false,
+    path: "/staff/orders-declined",
+  },
+
+  {
+    name: "Confirmed",
+    href: "#",
+    icon: DocumentReportIcon,
+    current: false,
+    path: "/staff/orders-confirmed",
   },
 ];
-const secondaryNavigation = [
-  { name: "Settings", href: "#", icon: CogIcon },
-  { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-  { name: "Privacy", href: "#", icon: ShieldCheckIcon },
-];
+const secondaryNavigation = [];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -165,23 +167,6 @@ export default function StaffLayout() {
                       </Link>
                     ))}
                   </div>
-                  <div className="mt-6 pt-6">
-                    <div className="px-2 space-y-1">
-                      {secondaryNavigation.map((item) => (
-                        <a
-                          key={item.name}
-                          href={item.href}
-                          className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-amber-100 hover:text-white hover:bg-amber-500"
-                        >
-                          <item.icon
-                            className="mr-4 h-6 w-6 text-amber-200"
-                            aria-hidden="true"
-                          />
-                          {item.name}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
                 </nav>
               </div>
             </Transition.Child>
@@ -192,7 +177,10 @@ export default function StaffLayout() {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0 ">
           <div className="flex flex-col flex-grow bg-amber-600 pt-5 pb-4 overflow-y-auto m-3 rounded-xl">
-            <div className="flex items-center flex-shrink-0 px-4">
+            <div className="flex items-center flex-shrink-0 px-4 text-white text-lg my-4">
+              <div className="font-bold text-center">
+                Procurement Management System - Staff
+              </div>
               {/* <img
                 className="h-8 w-auto"
                 src="https://tailwindui.com/img/logos/easywire-logo-cyan-300-mark-white-text.svg"
@@ -225,23 +213,6 @@ export default function StaffLayout() {
                     </div>
                   </Link>
                 ))}
-              </div>
-              <div className="mt-6 pt-6">
-                <div className="px-2 space-y-1">
-                  {secondaryNavigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-white hover:text-white hover:bg-amber-500"
-                    >
-                      <item.icon
-                        className="mr-4 h-6 w-6 text-white"
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
               </div>
             </nav>
           </div>
@@ -371,6 +342,13 @@ export default function StaffLayout() {
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
                   <Route path="/products" element={<ProductsList />} />
+                  <Route path="/orders-approved" element={<AcceptOrders />} />
+                  <Route path="/orders-declined" element={<DeclinedOrders />} />
+                  <Route path="/orders-pending" element={<PendingOrders />} />
+                  <Route
+                    path="/orders-confirmed"
+                    element={<ConfirmedOrders />}
+                  />
                   <Route
                     path="/update-product/:productId"
                     element={<UpdateProduct />}

@@ -157,22 +157,22 @@ export default function ProductsList() {
                           </DialogTitle>
                           <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Title : {productDetails.title}
                               </p>
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Owner : {productDetails.owner}
                               </p>
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Price : {productDetails.unitPrice}
                               </p>
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Quantity : {productDetails.quantity}
                               </p>
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Location : {productDetails.location}
                               </p>
-                              <p className="align-middle text-gray-900 pb-4">
+                              <p className="align-middle text-gray-900 pb-4 ml-4">
                                 Quantity : {productDetails.quantity}
                               </p>
                             </DialogContentText>
@@ -187,7 +187,7 @@ export default function ProductsList() {
                             </button> */}
                             <button
                               type="button"
-                              className="inline-flex items-center justify-center rounded-md border border-transparent bg-amber-400 px-8 py-2 text-m text-white"
+                              className="inline-flex w-full font-semibold items-center justify-center rounded-md border border-transparent bg-yellow-600 mx-10 mb-4 text-white px-4 py-2 text-sm"
                               onClick={() => handleClose()}
                             >
                               OK
