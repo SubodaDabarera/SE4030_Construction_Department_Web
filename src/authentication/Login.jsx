@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import '../components/firebase.config'
+import "../components/firebase.config";
+import { useSession } from "../hooks/useSession";
 
 const Login = () => {
+  const { setItem } = useSession();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userRole, setUserRole] = useState("");
@@ -14,7 +17,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        localStorage.setItem("user", JSON.stringify(user))
+        setItem('user', user, 100000)
       })
       .catch((error) => {
         const errorCode = error.code;
