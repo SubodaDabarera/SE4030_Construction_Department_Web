@@ -3,6 +3,7 @@ import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import "../components/firebase.config";
 import { useSession } from "../hooks/useSession";
 import { useRoles } from "../hooks/useRoles";
+import { emailRegex, passwordRegex } from "../utill/regrex";
 
 const Register = () => {
   const { setItem } = useSession();
@@ -10,9 +11,28 @@ const Register = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userRole, setUserRole] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const onSignUp = () => {
+    if (!password) {
+      setPasswordError("Password required");
+    } else if (!passwordRegex.test(password)) {
+      setPasswordError(
+        "Your password must be at least 6 characters long, contain at least one number, special character, and have a mix of uppercase and lowercase letters."
+      );
+    } else {
+      setPasswordError("");
+    }
+
+    if (!email) {
+      setEmailError("Email required");
+    } else if (!emailRegex.test(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+    }
+
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -68,9 +88,24 @@ const Register = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      onChange={(e) => setEmail(e.target.value)}
+                      className={`appearance-none block w-full px-3 py-2 border ${
+                        emailError ? "border-red-500" : "border-gray-300"
+                      } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        // Validate the email using the regex
+                        if (!emailRegex.test(value)) {
+                          setEmailError("Invalid email address");
+                        } else {
+                          setEmail(value);
+                          setEmailError("");
+                        }
+                      }}
                     />
+                    {emailError && (
+                      <p className="mt-2 text-sm text-red-500">{emailError}</p>
+                    )}
                   </div>
                 </div>
 
@@ -88,9 +123,27 @@ const Register = () => {
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      onChange={(e) => setPassword(e.target.value)}
+                      className={`appearance-none block w-full px-3 py-2 border ${
+                        passwordError ? "border-red-500" : "border-gray-300"
+                      } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setPassword(value);
+                        // Validate the password using the regex
+                        if (!passwordRegex.test(value)) {
+                          setPasswordError(
+                            "Your password must be at least 6 characters long, contain at least one number, special character, and have a mix of uppercase and lowercase letters."
+                          );
+                        } else {
+                          setPasswordError("");
+                        }
+                      }}
                     />
+                    {passwordError && (
+                      <p className="mt-2 text-sm text-red-500">
+                        {passwordError}
+                      </p>
+                    )}
                   </div>
                 </div>
 

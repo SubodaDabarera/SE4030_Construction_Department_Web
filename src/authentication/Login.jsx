@@ -3,18 +3,30 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import "../components/firebase.config";
 import { useSession } from "../hooks/useSession";
 import { useRoles } from "../hooks/useRoles";
-import { useNavigate } from "react-router";
+import { emailRegex } from "../utill/regrex";
 
 const Login = () => {
   const { setItem } = useSession();
   const { checkRoles } = useRoles();
-  const { navigate } = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userRole, setUserRole] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const onSignIn = () => {
+    if (!password) {
+      setPasswordError("Password required");
+    } else {
+      setPasswordError("");
+    }
+
+    if (!email) {
+      setEmailError("Email required");
+    } else {
+      setEmailError("");
+    }
+
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -29,7 +41,6 @@ const Login = () => {
         if (user.email) {
           const role = checkRoles(user.email);
           if (role) {
-            
             window.location.href = `/${role}/products`;
           }
         }
@@ -74,9 +85,24 @@ const Login = () => {
                       type="email"
                       autoComplete="email"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      onChange={(e) => setEmail(e.target.value)}
+                      className={`appearance-none block w-full px-3 py-2 border ${
+                        emailError ? "border-red-500" : "border-gray-300"
+                      } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        // Validate the email using the regex
+                        if (!emailRegex.test(value)) {
+                          setEmailError("Invalid email address");
+                        } else {
+                          setEmail(value);
+                          setEmailError("");
+                        }
+                      }}
                     />
+                    {emailError && (
+                      <p className="mt-2 text-sm text-red-500">{emailError}</p>
+                    )}
                   </div>
                 </div>
 
@@ -94,9 +120,20 @@ const Login = () => {
                       type="password"
                       autoComplete="current-password"
                       required
-                      className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 sm:text-sm"
-                      onChange={(e) => setPassword(e.target.value)}
+                      className={`appearance-none block w-full px-3 py-2 border ${
+                        passwordError ? "border-red-500" : "border-gray-300"
+                      } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm`}
+                      onChange={(e) => {
+                        const value = e.target.value;
+
+                        setPassword(value);
+                      }}
                     />
+                    {passwordError && (
+                      <p className="mt-2 text-sm text-red-500">
+                        {passwordError}
+                      </p>
+                    )}
                   </div>
                 </div>
 
