@@ -6,6 +6,7 @@ import Register from "./authentication/Register";
 import StaffLayout from "./layouts/StaffLayout";
 import TopPMLayout from "./layouts/TopPMLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
               />
             }
           />
+          <Route path="/page-not-found/*" element={<PageNotFound />} />
         </Routes>
       </Router>
     </div>
