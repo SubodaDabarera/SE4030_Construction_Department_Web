@@ -25,6 +25,7 @@ import AcceptOrders from "../components/order/AcceptOrders";
 import DeclinedOrders from "../components/order/DeclinedOrders";
 import PendingOrders from "../components/order/PendingOrders";
 import ConfirmedOrders from "../components/order/ConfirmedOrders";
+import { useSession } from "../hooks/useSession";
 
 const navigation = [
   {
@@ -79,6 +80,8 @@ function classNames(...classes) {
 }
 
 export default function StaffLayout() {
+  const { removeSession } = useSession();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -319,15 +322,16 @@ export default function StaffLayout() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
+                          <div
                             href="#"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
+                            onClick={removeSession}
                           >
                             Logout
-                          </a>
+                          </div>
                         )}
                       </Menu.Item>
                     </Menu.Items>

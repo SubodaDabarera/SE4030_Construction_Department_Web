@@ -1,20 +1,38 @@
 import React, { useState } from "react";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import '../components/firebase.config'
+import "../components/firebase.config";
+import { useSession } from "../hooks/useSession";
+import { useRoles } from "../hooks/useRoles";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const { setItem } = useSession();
+  const { checkRoles } = useRoles();
+  const { navigate } = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userRole, setUserRole] = useState("");
 
   const onSignIn = () => {
-    console.log(email, password, userRole);
-
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        localStorage.setItem("user", JSON.stringify(user))
+        setItem("user", user, 100000);
+        user.getIdToken().then((idToken) => {
+          // Save the ID token in session storage
+          setItem("token", idToken, 60 * 60 * 1000);
+        });
+
+        // route to desired pages
+        if (user.email) {
+          const role = checkRoles(user.email);
+          if (role) {
+            
+            window.location.href = `/${role}/products`;
+          }
+        }
       })
       .catch((error) => {
         const errorCode = error.code;

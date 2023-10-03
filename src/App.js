@@ -5,17 +5,44 @@ import Login from "./authentication/Login";
 import Register from "./authentication/Register";
 import StaffLayout from "./layouts/StaffLayout";
 import TopPMLayout from "./layouts/TopPMLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <div className="">
+    <div>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/admin/*" element={<AdminLayout />} />
-          <Route path="/staff/*" element={<StaffLayout />} />
-          <Route path="/topPM/*" element={<TopPMLayout />} />
+          <Route
+            path="/admin/*"
+            element={
+              <ProtectedRoute
+                element={<AdminLayout />}
+                allowedRoles={["admin"]}
+              />
+            }
+          />
+
+          <Route
+            path="/staff/*"
+            element={
+              <ProtectedRoute
+                element={<StaffLayout />}
+                allowedRoles={["staff", "admin"]}
+              />
+            }
+          />
+
+          <Route
+            path="/topPM/*"
+            element={
+              <ProtectedRoute
+                element={<TopPMLayout />}
+                allowedRoles={["topPM", "admin"]}
+              />
+            }
+          />
         </Routes>
       </Router>
     </div>
