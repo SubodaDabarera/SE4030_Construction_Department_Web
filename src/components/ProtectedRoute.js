@@ -24,8 +24,7 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
     return <Navigate to="/login" />;
   } else if (!allowedRoles.includes(userRole)) {
     // If the user's role is not allowed, redirect to a 403 page
-    alert("You don't have access!");
-    return <Navigate to="/login" />;
+    return <Navigate to="/page-not-found" />;
   } else {
     // If the user is logged in and their role is allowed, render the element
     return element;
