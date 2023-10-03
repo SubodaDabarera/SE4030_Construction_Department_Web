@@ -1,15 +1,11 @@
-version: 1
+version: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: "FE-version-bump"
+      prefix: "version-bump"
     allow:
       - dependency-type: "direct"
-    open-pull-requests-limit: 8
-    ignore:
-      # For all packages, ignore all patch updates
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+    open-pull-requests-limit: 30
