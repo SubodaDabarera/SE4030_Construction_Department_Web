@@ -1,11 +1,7 @@
 import { Menu, Transition } from "@headlessui/react";
 import React, { Fragment, useState } from "react";
 import storage from "../firebase.config";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL
-} from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import { ChevronDownIcon } from "@heroicons/react/outline";
@@ -49,7 +45,6 @@ const AddProducts = () => {
   const [disabled, setDisabled] = useState(false);
 
   const navigate = useNavigate();
-
 
   const handleSubmit = async () => {
     console.log("handle submit");
@@ -97,7 +92,7 @@ const AddProducts = () => {
           unitPrice: price,
           location,
           description,
-          imgUrl
+          imgUrl,
         },
         setIsCreationSuccess
       )
@@ -141,42 +136,61 @@ const AddProducts = () => {
   // image processing start
   function handleUpload() {
     if (!file) {
-      alert("Please choose a file first!")
+      alert("Please choose a file first!");
     }
 
-    const storageRef = ref(storage, `/products/${file.name}`);
+    // Check the file type.
+    const allowedFileTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedFileTypes.includes(file.type)) {
+      alert("Only JPEG, PNG, and GIF files are allowed.");
+      return;
+    }
+
+    // Limit the file size.
+    const maxFileSize = 4 * 1024 * 1024; // 4MB
+    if (file.size > maxFileSize) {
+      alert(
+        "The file is too large. Please upload a file that is smaller than 4MB."
+      );
+      return;
+    }
+
+    // Sanitize the file name.
+    const fileName = file.name.replace(/[^\w.-]/g, "");
+
+    const storageRef = ref(storage, `/products/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const percent = Math.round(
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-          );
-          // update progress
-          setPercent(percent);
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        // update progress
+        setPercent(percent);
 
-          if (percent === 100) {
-            toast.success("Profile Picture uploaded successfully !", {
-              position: "top-right",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-            });
-          }
-        },
-        (err) => console.log(err),
-        () => {
-          // download url
-          getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-            console.log(url);
-            setImgUrl(url);
-            setDisabled(true);
+        if (percent === 100) {
+          toast.success("Profile Picture uploaded successfully !", {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
           });
         }
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log(url);
+          setImgUrl(url);
+          setDisabled(true);
+        });
+      }
     );
   }
   // image processing end
@@ -364,16 +378,22 @@ const AddProducts = () => {
           />
 
           <label
-              htmlFor="image"
-              className="block text-base font-medium text-gray-700 mt-6"
+            htmlFor="image"
+            className="block text-base font-medium text-gray-700 mt-6"
           >
             Image :
           </label>
           <div>
-            <input type="file" onChange={(event)=>{setFile(event.target.files[0])}} />
+            <input
+              type="file"
+              onChange={(event) => {
+                setFile(event.target.files[0]);
+              }}
+            />
             <button
-                className="p-1 bg-slate-300 rounded-md mr-2 text-slate-800 hover:bg-gray-400"
-                onClick={handleUpload}>
+              className="p-1 bg-slate-300 rounded-md mr-2 text-slate-800 hover:bg-gray-400"
+              onClick={handleUpload}
+            >
               Upload to Firebase
             </button>
             <p>{percent} "% done"</p>
@@ -392,9 +412,9 @@ const AddProducts = () => {
 
           <div className="flex items-center justify-center mt-10">
             <button
-                disabled={disabled}
-                className="px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-amber-400 hover:bg-amber-600 transition-colors cursor-pointer"
-                onClick={handleSubmit}
+              disabled={disabled}
+              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-amber-400 hover:bg-amber-600 transition-colors cursor-pointer"
+              onClick={handleSubmit}
             >
               Submit
             </button>
