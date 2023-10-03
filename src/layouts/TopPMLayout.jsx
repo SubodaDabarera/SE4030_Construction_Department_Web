@@ -1,29 +1,22 @@
-import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
-  BellIcon,
-  ClockIcon,
   CogIcon,
-  CreditCardIcon,
   DocumentReportIcon,
-  HomeIcon,
+  DocumentTextIcon,
   MenuAlt1Icon,
   QuestionMarkCircleIcon,
-  ScaleIcon,
   ShieldCheckIcon,
-  UserGroupIcon,
   ViewListIcon,
-  DocumentTextIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon, SearchIcon } from "@heroicons/react/solid";
+import { Fragment, useState } from "react";
+import { Link, Route, Routes } from "react-router-dom";
 import AddProducts from "../components/product/AddProducts";
-import AdminWrapper from "../wrappers/AdminWrapper";
-import { Link } from "react-router-dom";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProductsList from "../components/product/ProductList";
-import RequestListNew from "../pages/pManager/RequestListNew";
 import RequestListTopPM from "../pages/topPM/RequestListTopPM";
+import AdminWrapper from "../wrappers/AdminWrapper";
+import { useSession } from "../hooks/useSession";
 
 const navigation = [
   {
@@ -59,6 +52,8 @@ function classNames(...classes) {
 }
 
 export default function TopPMLayout() {
+  const { removeSession } = useSession();
+
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState("Products");
 
@@ -213,15 +208,16 @@ export default function TopPMLayout() {
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
+                              <div
                                 href="#"
                                 className={classNames(
                                   active ? "bg-gray-100" : "",
                                   "block px-4 py-2 text-sm text-gray-700"
                                 )}
+                                onClick={removeSession}
                               >
                                 Logout
-                              </a>
+                              </div>
                             )}
                           </Menu.Item>
                         </Menu.Items>
@@ -339,15 +335,16 @@ export default function TopPMLayout() {
                     </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
-                        <a
+                        <div
                           href="#"
                           className={classNames(
                             active ? "bg-gray-100" : "",
                             "block px-4 py-2 text-sm text-gray-700"
                           )}
+                          onClick={removeSession}
                         >
                           Logout
-                        </a>
+                        </div>
                       )}
                     </Menu.Item>
                   </Menu.Items>
@@ -401,7 +398,10 @@ export default function TopPMLayout() {
                 <Routes>
                   <Route path="/new-product" element={<AddProducts />} />
                   <Route path="/products" element={<ProductsList />} />
-                  <Route path="/order-requests" element={<RequestListTopPM />} />
+                  <Route
+                    path="/order-requests"
+                    element={<RequestListTopPM />}
+                  />
                 </Routes>
               </AdminWrapper>
             </div>

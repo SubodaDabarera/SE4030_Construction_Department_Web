@@ -30,5 +30,13 @@ export const useSession = () => {
     return item.value;
   };
 
-  return { setItem, getItem };
+  const removeSession = () => {
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+
+    window.location.href = '/login';
+
+  };
+
+  return { setItem, getItem, removeSession };
 };
