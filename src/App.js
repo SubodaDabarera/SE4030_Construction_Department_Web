@@ -9,7 +9,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
-    <div className="">
+    <div>
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -29,7 +29,7 @@ function App() {
             element={
               <ProtectedRoute
                 element={<StaffLayout />}
-                allowedRoles={["staff"]}
+                allowedRoles={["staff", "admin"]}
               />
             }
           />
@@ -39,7 +39,7 @@ function App() {
             element={
               <ProtectedRoute
                 element={<TopPMLayout />}
-                allowedRoles={["topM"]}
+                allowedRoles={["topPM", "admin"]}
               />
             }
           />

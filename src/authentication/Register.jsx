@@ -1,29 +1,41 @@
 import React, { useState } from "react";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import '../components/firebase.config'
+import "../components/firebase.config";
+import { useSession } from "../hooks/useSession";
+import { useRoles } from "../hooks/useRoles";
 
 const Register = () => {
+  const { setItem } = useSession();
+  const { checkRoles } = useRoles();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userRole, setUserRole] = useState("");
 
   const onSignUp = () => {
-
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        localStorage.setItem("user", JSON.stringify(user))
-        console.log(user)
+        localStorage.setItem("user", JSON.stringify(user));
+        setItem("user", user, 100000);
+        user.getIdToken().then((idToken) => {
+          // Save the ID token in session storage
+          setItem("token", idToken, 60 * 60 * 1000);
+        });
+
+        if (user.email) {
+          const role = checkRoles(user.email);
+          if (role) {
+            window.location.href = `/${role}/products`;
+          }
+        }
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
       });
   };
-
-
-  console.log(JSON.parse(localStorage.getItem('user')));
 
   return (
     <div className="min-h-screen flex">
@@ -47,7 +59,7 @@ const Register = () => {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Email address
+                    Email address Ex: abc.admin@example.com
                   </label>
                   <div className="mt-1">
                     <input
