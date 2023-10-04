@@ -12,7 +12,6 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
   if (user) {
     if (user.email) {
       const role = checkRoles(user.email);
-      console.log(user.email, "email...");
       if (role) {
         userRole = role;
       }

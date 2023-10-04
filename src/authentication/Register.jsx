@@ -18,7 +18,7 @@ const Register = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         localStorage.setItem("user", JSON.stringify(user));
-        setItem("user", user, 100000);
+        setItem("user", user,  60 * 60 * 1000);
         user.getIdToken().then((idToken) => {
           // Save the ID token in session storage
           setItem("token", idToken, 60 * 60 * 1000);

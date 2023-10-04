@@ -19,7 +19,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        setItem("user", user, 100000);
+        setItem("user", user, 60 * 60 * 1000);
         user.getIdToken().then((idToken) => {
           // Save the ID token in session storage
           setItem("token", idToken, 60 * 60 * 1000);
@@ -37,6 +37,7 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        return {errorCode, errorMessage}
       });
   };
 
