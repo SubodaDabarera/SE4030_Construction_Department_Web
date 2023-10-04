@@ -33,8 +33,8 @@ const AddProducts = () => {
   // error messages
   const [isPriceError, setIsPriceError] = useState(false);
   const [isQtyError, setIsQtyError] = useState(false);
-  const [isCategoryError, setIsCategoryError] = useState(false);
-  const [isTypeError, setIsTypeError] = useState(false);
+
+  const [isDescriptionError, setIsDescriptionError] = useState(false);
   const [isLocationError, setIsLocationError] = useState(false);
   const [isOwnerError, setIsOwnerError] = useState(false);
   const [isTitleError, setIsTitleError] = useState(false);
@@ -43,8 +43,6 @@ const AddProducts = () => {
   const [file, setFile] = useState(null);
   const [percent, setPercent] = useState(0);
   const [disabled, setDisabled] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     console.log("handle submit");
@@ -60,17 +58,30 @@ const AddProducts = () => {
       setIsPriceError(false);
     }
 
-    // if (category == "") {
-    //   setIsCategoryError(true);
-    // } else {
-    //   setIsCategoryError(false);
-    // }
+    const isValidTitle = /^[a-zA-Z0-9\s]+$/.test(title);
+    if (!isValidTitle) {
+      setIsTitleError(true);
+      return;
+    } else {
+      setIsTitleError(false);
+    }
 
-    // if (type == "") {
-    //   setIsTypeError(true);
-    // } else {
-    //   setIsTypeError(false);
-    // }
+    const isValidDiscription = /^[a-zA-Z0-9\s]+$/.test(description);
+    if (!isValidDiscription) {
+      setIsDescriptionError(true);
+      return;
+    } else {
+      setIsDescriptionError(false);
+    }
+
+    const isValidLocation = /^[a-zA-Z0-9\s]+$/.test(location);
+    if (!isValidLocation) {
+      setIsLocationError(true);
+      return;
+    } else {
+      setIsLocationError(false);
+    }
+
     if (title == "") {
       setIsTitleError(true);
     } else {
@@ -97,17 +108,7 @@ const AddProducts = () => {
         setIsCreationSuccess
       )
         .then(() => {
-          toast.success("Data added successfully !", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
-
-          // navigate("/farmer/mySeedRequests");
+          alert("Data added successfully !");
         })
         .catch(() => {
           toast.error("Something went wrong!", {
@@ -147,10 +148,10 @@ const AddProducts = () => {
     }
 
     // Limit the file size.
-    const maxFileSize = 4 * 1024 * 1024; // 4MB
+    const maxFileSize = 1024 * 1024; // 1MB
     if (file.size > maxFileSize) {
       alert(
-        "The file is too large. Please upload a file that is smaller than 4MB."
+        "The file is too large. Please upload a file that is smaller than 1MB."
       );
       return;
     }
@@ -171,15 +172,7 @@ const AddProducts = () => {
         setPercent(percent);
 
         if (percent === 100) {
-          toast.success("Profile Picture uploaded successfully !", {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          alert("Profile Picture uploaded successfully !");
         }
       },
       (err) => console.log(err),
@@ -291,7 +284,7 @@ const AddProducts = () => {
 
           {isTitleError && (
             <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
-              Type must have value
+              Please enter valid title
             </div>
           )}
 
@@ -315,7 +308,7 @@ const AddProducts = () => {
 
           {isPriceError && (
             <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
-              Type must have value
+              Please add unit price
             </div>
           )}
 
@@ -360,6 +353,12 @@ const AddProducts = () => {
             }}
           />
 
+          {isLocationError && (
+            <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
+              Please input valid location
+            </div>
+          )}
+
           <label
             htmlFor="description"
             className="block text-base font-medium text-gray-700 mt-6"
@@ -376,6 +375,12 @@ const AddProducts = () => {
               setDescription(event.target.value);
             }}
           />
+
+          {isDescriptionError && (
+            <div className="text-red-500 mt-1 text-sm bg-red-100 pl-2 p-1 font-medium rounded-sm">
+              Please input valid description
+            </div>
+          )}
 
           <label
             htmlFor="image"
